@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Icons } from "./Icons";
 import Link from "next/link";
+import { ModeToggle } from "./layouts/mode-toggle";
 
 const Footer = () => {
   const pathname = usePathname();
@@ -75,6 +76,8 @@ const Footer = () => {
                 Cookie Policy
               </Link>
             </div>
+            <div className="px-5"></div>
+            <ModeToggle />
           </div>
         </div>
       </MaxWidthWrapper>
