@@ -1,83 +1,65 @@
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import ProductReel from "@/components/ProductReel";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
 import Link from "next/link";
 
-const perks = [
-  {
-    name: "Instant Delivery",
-    Icon: ArrowDownToLine,
-    description: "Next day delivery available to home or free to store.",
-  },
-  {
-    name: "Guaranteed Quality",
-    Icon: CheckCircle,
-    description:
-      "Every product on our platform is verified by our team to ensure our highest quality standards.",
-  },
-  {
-    name: "For the Planet",
-    Icon: Leaf,
-    description:
-      "We've pledged 1% of sales to the preservation and restoration of the natural environment.",
-  },
-];
-export default function Home() {
+import { CreatePost } from "~/app/_components/create-post";
+import { api } from "~/trpc/server";
+
+export default async function Home() {
+  const hello = await api.post.hello({ text: "from tRPC" });
+
   return (
-    <>
-      <MaxWidthWrapper>
-        <div className="py-20 mx-auto text-center flex flex-col items-center max-w-3xl">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Your marketplace for high-quality{" "}
-            <span className="text-blue-600">products</span>.
-          </h1>
-          <p className="mt-6 text-lg max-w-prose text-muted-foreground">
-            Welcome to <span className="font-bold">esü</span>. Every product on
-            our platform is verified by our team to ensure our highest quality
-            standards.
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
+        </h1>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
+          <Link
+            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
+            href="https://create.t3.gg/en/usage/first-steps"
+            target="_blank"
+          >
+            <h3 className="text-2xl font-bold">First Steps →</h3>
+            <div className="text-lg">
+              Just the basics - Everything you need to know to set up your
+              database and authentication.
+            </div>
+          </Link>
+          <Link
+            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
+            href="https://create.t3.gg/en/introduction"
+            target="_blank"
+          >
+            <h3 className="text-2xl font-bold">Documentation →</h3>
+            <div className="text-lg">
+              Learn more about Create T3 App, the libraries it uses, and how to
+              deploy it.
+            </div>
+          </Link>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-2xl text-white">
+            {hello ? hello.greeting : "Loading tRPC query..."}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            <Link href="/products" className={buttonVariants()}>
-              Browse Trending
-            </Link>
-            <Button variant="ghost">Our quality promise &rarr;</Button>
-          </div>
         </div>
 
-        <ProductReel
-          title="Brand New"
-          href="/products"
-          query={{ sort: "desc", limit: 4 }}
-        />
-      </MaxWidthWrapper>
+        <CrudShowcase />
+      </div>
+    </main>
+  );
+}
 
-      <section className="border border-gray-200 bg-gray-50">
-        <MaxWidthWrapper className="py-20">
-          <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0">
-            {perks.map((perk) => (
-              <div
-                key={perk.name}
-                className="text-center md:flex md:items-start md:text-left lg:block lg:text-center"
-              >
-                <div className="md:flex-shrink-0 flex justify-center">
-                  <div className="h-16 w-16 flex items-center justify-center rounded-full bg-blue-100 text-blue-900">
-                    {<perk.Icon className="w-1/3 h-1/3" />}
-                  </div>
-                </div>
-                <div className="mt-6 md:ml-4 md:mt-0 lg:ml-0 lg:mt-6">
-                  <h3 className="text-base font-medium text-gray-900">
-                    {perk.name}
-                  </h3>
-                  <p className="mt-6 text-sm text-muted-foreground">
-                    {perk.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </MaxWidthWrapper>
-      </section>
-    </>
+async function CrudShowcase() {
+  const latestPost = await api.post.getLatest();
+
+  return (
+    <div className="w-full max-w-xs">
+      {latestPost ? (
+        <p className="truncate">Your most recent post: {latestPost.name}</p>
+      ) : (
+        <p>You have no posts yet.</p>
+      )}
+
+      <CreatePost />
+    </div>
   );
 }
