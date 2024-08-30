@@ -1,4 +1,5 @@
-import { mongooseAdapter } from "@payloadcms/db-mongodb";
+// import { mongooseAdapter } from "@payloadcms/db-mongodb";
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { buildConfig } from "payload/config";
 import { webpackBundler } from "@payloadcms/bundler-webpack";
@@ -9,6 +10,7 @@ import { Products } from "./collections/Products/Products";
 import { Media } from "./collections/Media";
 import { ProductFiles } from "./collections/ProductFile";
 import { Orders } from "./collections/Orders";
+import { db } from './db';
 
 dotenv.config({
   path: path.resolve(__dirname, "../.env"),
@@ -33,9 +35,10 @@ export default buildConfig({
     max: 500, //TODO: reduce to 500 for production
   },
   editor: slateEditor({}),
-  db: mongooseAdapter({
-    url: process.env.MONGODB_URI!,
-  }),
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URL_LOCAL!,
+    } }),
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
   },
