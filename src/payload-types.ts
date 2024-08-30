@@ -23,9 +23,9 @@ export interface Config {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
-  products?: (string | Product)[] | null;
-  product_files?: (string | ProductFile)[] | null;
+  id: number;
+  products?: (number | Product)[] | null;
+  product_files?: (number | ProductFile)[] | null;
   role?: ('superadmin' | 'admin' | 'user') | null;
   updatedAt: string;
   createdAt: string;
@@ -45,18 +45,18 @@ export interface User {
  * via the `definition` "products".
  */
 export interface Product {
-  id: string;
-  user?: (string | null) | User;
+  id: number;
+  user?: (number | null) | User;
   name: string;
   description?: string | null;
   price: number;
   category: 'clothing' | 'jewellery';
-  product_files: string | ProductFile;
+  product_files: number | ProductFile;
   approvedForSale?: ('pending' | 'approved' | 'denied') | null;
   priceId?: string | null;
   stripeId?: string | null;
   images: {
-    image: string | Media;
+    image: number | Media;
     id?: string | null;
   }[];
   updatedAt: string;
@@ -67,8 +67,8 @@ export interface Product {
  * via the `definition` "product_files".
  */
 export interface ProductFile {
-  id: string;
-  user?: (string | null) | User;
+  id: number;
+  user?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -83,8 +83,8 @@ export interface ProductFile {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
-  user?: (string | null) | User;
+  id: number;
+  user?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -125,10 +125,10 @@ export interface Media {
  * via the `definition` "orders".
  */
 export interface Order {
-  id: string;
+  id: number;
   _isPaid: boolean;
-  user: string | User;
-  products: (string | Product)[];
+  user: number | User;
+  products: (number | Product)[];
   updatedAt: string;
   createdAt: string;
 }
@@ -137,10 +137,10 @@ export interface Order {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -160,7 +160,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;

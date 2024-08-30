@@ -44,29 +44,35 @@ const syncUser: AfterChangeHook<Product> = async ({ req, doc }) => {
   }
 };
 
-const isAdminOrHasAccess =
-  (): Access =>
-  ({ req: { user: _user } }) => {
-    const user = _user as User | undefined;
+function isProduct(product: number | Product): product is Product {
+  return typeof product === 'object' && product !== null && 'id' in product;
+}
 
-    if (!user) return false;
-    if (user.role === "admin") return true;
+const isAdminOrHasAccess = (): Access => ({ req: { user: _user } }) => {
+  const user = _user as User | undefined;
 
-    const userProductIds = (user.products || []).reduce<Array<string>>(
-      (acc, product) => {
-        if (!product) return acc;
-        if (typeof product === "string") {
-          acc.push(product);
-        } else {
-          acc.push(product.id);
-        }
-        return acc;
-      },
-      []
-    );
+  if (!user) return false;
+  if (user.role === "admin") return true;
 
-    return { id: { in: userProductIds } };
-  };
+  const userProductIds = (user.products || []).reduce<Array<string>>(
+    (acc, product) => {
+      if (!product) return acc;
+
+      if (typeof product === "string") {
+        acc.push(product);
+      } else if (isProduct(product)) {
+        acc.push(product.id.toString());
+      } else {
+        acc.push(product.toString())
+      }
+
+      return acc;
+    },
+    []
+  );
+
+  return { id: { in: userProductIds } };
+};
 
 export const Products: CollectionConfig = {
   slug: "products",

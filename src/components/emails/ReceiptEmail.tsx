@@ -1,5 +1,5 @@
 import { formatPrice } from "../../lib/utils";
-import { Product } from "../../payload-types";
+import { Media, Product } from "../../payload-types";
 import {
   Body,
   Container,
@@ -23,6 +23,10 @@ interface ReceiptEmailProps {
   date: Date;
   orderId: string;
   products: Product[];
+}
+
+function isMedia(image: number | Media): image is Media {
+  return typeof image !== "number" && 'url' in image;
 }
 
 export const ReceiptEmail = ({
@@ -95,9 +99,9 @@ export const ReceiptEmail = ({
             return (
               <Section key={product.id}>
                 <Column style={{ width: "64px" }}>
-                  {typeof image !== "string" && image.url ? (
+                  {isMedia(image) ? (
                     <Img
-                      src={image.url}
+                      src={image.url!}
                       width="64"
                       height="64"
                       alt="Product Image"
