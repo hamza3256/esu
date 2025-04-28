@@ -67,8 +67,8 @@ Here are the key features of the ESÜ Store application:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/hamza3256/esu-store.git
-   cd esu-store
+   git clone https://github.com/hamza3256/esu.git
+   cd esu
    ```
 
 2. Install dependencies:
